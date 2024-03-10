@@ -6,12 +6,14 @@ use App\Filament\Resources\TaskResource\Pages;
 use App\Filament\Resources\TaskResource\RelationManagers;
 use App\Models\Task;
 use Filament\Forms;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Filament\Forms\Components\RichEditor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -25,18 +27,25 @@ class TaskResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('task_group_id')
-                    ->required()
-                    ->numeric(),
+                Grid::make()->schema([
+                Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'name')
+                    ->searchable()
+                    ->required(),
+                Forms\Components\Select::make('task_group_id')
+                    ->searchable()
+                    ->relationship('taskGroup', 'title')
+                    ->required(),
                 Forms\Components\TextInput::make('title')
                     ->required()
+                    ->columnSpan(2)
                     ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
-            ]);
+                    RichEditor::make('description')
+                        ->maxLength(65535)
+                        ->columnSpan(2),
+                    ])
+                    ->columns(2)
+                ]);
     }
 
     public static function table(Table $table): Table
