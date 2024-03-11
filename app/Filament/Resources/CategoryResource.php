@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TaskGroupResource\Pages;
-use App\Filament\Resources\TaskGroupResource\RelationManagers;
-use App\Models\TaskGroup;
+use App\Filament\Resources\CategoryResource\Pages;
+use App\Filament\Resources\CategoryResource\RelationManagers;
+use App\Models\Category;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,26 +13,22 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TaskGroupResource extends Resource
+class CategoryResource extends Resource
 {
-    protected static ?string $model = TaskGroup::class;
-    protected static ?string $modelLabel = 'Grupo de Tarefa';
-    protected static ?string $pluralModelLabel = 'Grupo de Tarefas';
-
-    protected static ?string $navigationIcon = 'heroicon-o-bookmark';
-
-    protected static ?string $navigationGroup = 'Tarefas';
-
+    protected static ?string $model = Category::class;
+    protected static ?string $modelLabel = 'Categoria';
+    protected static ?string $pluralModelLabel = 'Categorias';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static ?string $navigationGroup = 'Estoque';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
+                Forms\Components\TextInput::make('name')
+                    ->label('Nome')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->columnSpanFull(),
             ]);
     }
 
@@ -40,19 +36,19 @@ class TaskGroupResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
+                Tables\Columns\TextColumn::make('name')
+                ->label('Nome')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->searchable()
-                    ->limit(30),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d/m/y H:i')
+                ->label('Data de Criação')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime('d/m/y H:i')
+                ->label('Data de Atualização')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(),
             ])
             ->filters([
                 //
@@ -71,7 +67,7 @@ class TaskGroupResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageTaskGroups::route('/'),
+            'index' => Pages\ManageCategories::route('/'),
         ];
     }
 }

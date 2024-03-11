@@ -22,35 +22,41 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class TaskResource extends Resource
 {
     protected static ?string $model = Task::class;
+    protected static ?string $modelLabel = 'Tarefa';
+    protected static ?string $pluralModelLabel = 'Tarefas';
 
     protected static ?string $navigationIcon = 'heroicon-o-hashtag';
 
-    protected static ?string $navigationGroup = 'Tasks';
+    protected static ?string $navigationGroup = 'Tarefas';
 
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('Tabs')->schema([
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->searchable()
-                    ->required(),
-                Forms\Components\Select::make('task_group_id')
-                    ->searchable()
-                    ->relationship('taskGroup', 'title')
-                    ->required(),
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->columnSpan(2)
-                    ->maxLength(255),
+                Section::make()->schema([
+                    Forms\Components\Select::make('user_id')
+                        ->label('Usuário')
+                        ->relationship('user', 'name')
+                        ->searchable()
+                        ->required(),
+                    Forms\Components\Select::make('task_group_id')
+                        ->label('Status')
+                        ->searchable()
+                        ->relationship('taskGroup', 'title')
+                        ->required(),
+                    Forms\Components\TextInput::make('title')
+                        ->label('Título')
+                        ->required()
+                        ->columnSpan(2)
+                        ->maxLength(255),
                     RichEditor::make('description')
+                        ->label('Descrição')
                         ->maxLength(65535)
                         ->columnSpan(2),
-                    ])
+                ])
                     ->columns(2)
-                ]);
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -65,15 +71,15 @@ class TaskResource extends Resource
                 TextColumn::make('taskGroup.title')
                     ->searchable()
                     ->sortable()
-                     ->badge()
-                     ->color(fn (string $state): string => match ($state) {
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
                         'BackLog' => 'gray',
                         'Testing' => 'warning',
                         'Done' => 'success',
                         'To Do' => 'danger',
                         'In Progress' => 'primary'
                     }),
-                   
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('d/m/y H:i')
                     ->sortable()

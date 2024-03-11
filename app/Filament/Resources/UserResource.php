@@ -6,6 +6,7 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -16,10 +17,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-
+    protected static ?string $modelLabel = 'Usuário';
+    protected static ?string $pluralModelLabel = 'Usuários';
     protected static ?string $navigationIcon = 'heroicon-o-users';
-
-    protected static ?string $navigationGroup = 'Adiministration';
+    protected static ?string $navigationGroup = 'Administrador';
 
     public static function getNavigationBadge(): ?string
     {
@@ -32,20 +33,26 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
+                Section::make()->schema([
                 Forms\Components\TextInput::make('name')
+                ->label('Nome')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
+                // Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
+                    ->label('Senha')
                     ->password()
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Toggle::make('is_admin')
+                ->label('Administrador')
                     ->required(),
+                    ])
+                    ->columns(1)
             ]);
     }
 
@@ -54,17 +61,22 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nome')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                ->label('Email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\ToggleColumn::make('is_admin'),
+                // Tables\Columns\TextColumn::make('email_verified_at')
+                //     ->dateTime()
+                //     ->sortable(),
+                Tables\Columns\ToggleColumn::make('is_admin')
+                ->label('Administrador'),
                 Tables\Columns\TextColumn::make('created_at')
+                ->label('Data de Criação')
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
