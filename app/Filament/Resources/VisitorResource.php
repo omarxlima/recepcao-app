@@ -7,7 +7,11 @@ use App\Filament\Resources\VisitorResource\RelationManagers;
 use App\Models\Visitor;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -72,6 +76,7 @@ class VisitorResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Imagem')
@@ -79,26 +84,26 @@ class VisitorResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nome')
                     ->searchable(),
-                    Tables\Columns\TextColumn::make('cpf')
+                Tables\Columns\TextColumn::make('cpf')
                     ->label('CPF')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('registration')
                     ->label('Matrícula')
                     ->searchable(),
-                    Tables\Columns\TextColumn::make('telephone')
+                Tables\Columns\TextColumn::make('telephone')
                     ->label('Telefone')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                    Tables\Columns\TextColumn::make('function')
+                Tables\Columns\TextColumn::make('function')
                     ->label('Função')
                     ->searchable(),
-                    Tables\Columns\TextColumn::make('capacity')
+                Tables\Columns\TextColumn::make('capacity')
                     ->label('Orgão')
                     ->searchable(),
-                    Tables\Columns\TextColumn::make('interlocutor')
+                Tables\Columns\TextColumn::make('interlocutor')
                     ->label('Interlocutor')
                     ->searchable(),
-                    Tables\Columns\TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('created_at')
                     ->label('Data de Criação')
                     ->dateTime('d/m/y H:i')
                     ->sortable()
@@ -113,6 +118,7 @@ class VisitorResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -120,7 +126,28 @@ class VisitorResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+
             ]);
+    }
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                    Infolists\Components\ImageEntry::make('image')
+                    ->label('Imagem')
+                    ->circular(),
+                    Infolists\Components\TextEntry::make('name'),
+                    Infolists\Components\TextEntry::make('cpf'),
+                    Infolists\Components\TextEntry::make('registration'),
+                    Infolists\Components\TextEntry::make('telephone'),
+                    Infolists\Components\TextEntry::make('function'),
+                    Infolists\Components\TextEntry::make('capacity'),
+                    Infolists\Components\TextEntry::make('interlocutor'),
+                    Infolists\Components\TextEntry::make('date_time')
+
+
+                        ->columnSpanFull(),
+                ]);
     }
 
     public static function getPages(): array
