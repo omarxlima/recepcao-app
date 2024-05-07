@@ -13,19 +13,22 @@ return new class extends Migration
     {
         Schema::create('visitors', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('funcionario_id');
             $table->string('name');
             $table->string('cpf');
             $table->string('registration')->nullable();
             $table->string('telephone')->nullable();
              $table->string('function')->nullable();
             $table->string('capacity');
-            $table->string('interlocutor');
+            $table->string('interlocutor')->nullable();
             $table->dateTime('date_time');
-            $table->unsignedBigInteger('user_id');
 			 $table->string('image')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('funcionario_id')->references('id')->on('funcionarios');
+
         });
     }
 

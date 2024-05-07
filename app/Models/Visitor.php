@@ -15,4 +15,8 @@ class Visitor extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function visitante(){
+        return $this->belongsTo(Funcionario::class);
+    }
+
 }

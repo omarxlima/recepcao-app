@@ -30,7 +30,12 @@ return new class extends Migration
             $table->boolean('ativo')->default(true);
 			 $table->string('image')->nullable();
             $table->timestamps();
+
         });
+
+
+
+
     }
 
     /**

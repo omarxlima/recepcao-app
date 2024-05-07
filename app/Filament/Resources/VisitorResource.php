@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\VisitorResource\Pages;
 use App\Filament\Resources\VisitorResource\RelationManagers;
+use App\Models\Funcionario;
 use App\Models\Visitor;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
@@ -58,10 +59,14 @@ class VisitorResource extends Resource
                     Forms\Components\TextInput::make('capacity')
                         ->label('Orgão Lotação')
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('interlocutor')
-                        ->label('Interlocutor')
-                        ->required()
-                        ->maxLength(255),
+                    // Forms\Components\TextInput::make('interlocutor')
+                    //     ->label('Interlocutor')
+                    //     ->required()
+                    //     ->maxLength(255),
+                    Forms\Components\Select::make('funcionario_id')
+                    ->label('Funcionario')
+                    ->options(Funcionario::all()->pluck('nome', 'id'))
+                    ->required(),
                     Forms\Components\DateTimePicker::make('date_time')
                         ->label('Data Hora')
                         ->seconds(false)
@@ -100,8 +105,8 @@ class VisitorResource extends Resource
                 Tables\Columns\TextColumn::make('capacity')
                     ->label('Orgão')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('interlocutor')
-                    ->label('Interlocutor')
+                Tables\Columns\TextColumn::make('Funcionario.nome')
+                    ->label('Funcionario')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Data de Criação')
