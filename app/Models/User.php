@@ -49,7 +49,7 @@ class User extends Authenticatable
     }
 
     public function funcionarios(){
-        return $this->hasMany(Visitor::class);
+        return $this->hasMany(Funcionario::class);
     }
 
 }

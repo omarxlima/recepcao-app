@@ -64,8 +64,8 @@ class VisitorResource extends Resource
                     //     ->required()
                     //     ->maxLength(255),
                     Forms\Components\Select::make('funcionario_id')
-                    ->label('Funcionario')
-                    ->options(Funcionario::all()->pluck('nome', 'id'))
+                    ->label('Interlocutor')
+                    ->relationship('funcionarios', 'nome')
                     ->required(),
                     Forms\Components\DateTimePicker::make('date_time')
                         ->label('Data Hora')
@@ -105,8 +105,8 @@ class VisitorResource extends Resource
                 Tables\Columns\TextColumn::make('capacity')
                     ->label('Orgão')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('Funcionario.nome')
-                    ->label('Funcionario')
+                Tables\Columns\TextColumn::make('funcionario.nome')
+                    ->label('Interlocutor')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Data de Criação')

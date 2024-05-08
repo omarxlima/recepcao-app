@@ -15,7 +15,7 @@ class Visitor extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function visitante(){
+    public function funcionario(){
         return $this->belongsTo(Funcionario::class);
     }
 

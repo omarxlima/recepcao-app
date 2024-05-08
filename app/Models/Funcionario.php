@@ -14,7 +14,7 @@ class Funcionario extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function visitantes(){
+    public function visitors(){
         return $this->hasMany(Visitor::class);
     }
 }
