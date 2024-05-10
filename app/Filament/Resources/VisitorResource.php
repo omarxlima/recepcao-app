@@ -4,18 +4,21 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\VisitorResource\Pages;
 use App\Filament\Resources\VisitorResource\RelationManagers;
+use App\Livewire\RegistrationVisitorForm;
 use App\Models\Funcionario;
 use App\Models\Visitor;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
+use Filament\Forms\Components\View;
 use Filament\Infolists;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -65,7 +68,7 @@ class VisitorResource extends Resource
                     //     ->maxLength(255),
                     Forms\Components\Select::make('funcionario_id')
                     ->label('Interlocutor')
-                    ->relationship('funcionarios', 'nome')
+                    ->relationship('funcionario', 'nome')
                     ->required(),
                     Forms\Components\DateTimePicker::make('date_time')
                         ->label('Data Hora')
@@ -86,6 +89,7 @@ class VisitorResource extends Resource
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Imagem')
                     ->circular(),
+            
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nome')
                     ->searchable(),
@@ -159,6 +163,7 @@ class VisitorResource extends Resource
     {
         return [
             'index' => Pages\ManageVisitors::route('/'),
+            // 'create' => pages\FotosVisitors::route('/create'),
         ];
     }
 }
