@@ -19,4 +19,9 @@ class Visitor extends Model
         return $this->belongsTo(Funcionario::class);
     }
 
+    public function foto()
+    {
+        return $this->hasMany(Foto::class);
+    }
+
 }
