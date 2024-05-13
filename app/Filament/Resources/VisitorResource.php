@@ -163,7 +163,7 @@ class VisitorResource extends Resource
     {
         return [
             'index' => Pages\ManageVisitors::route('/'),
-            // 'create' => pages\FotosVisitors::route('/create'),
+            // 'create' => Pages\FotosVisitors::route('/create'),
         ];
     }
 }

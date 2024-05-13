@@ -72,8 +72,8 @@ class UserResource extends Resource
                 // Tables\Columns\TextColumn::make('email_verified_at')
                 //     ->dateTime()
                 //     ->sortable(),
-                Tables\Columns\ToggleColumn::make('is_admin')
-                ->label('Administrador'),
+                // Tables\Columns\ToggleColumn::make('is_admin')
+                // ->label('Administrador'),
                 Tables\Columns\TextColumn::make('created_at')
                 ->label('Data de Criação')
                     ->dateTime('d/m/Y H:i')
