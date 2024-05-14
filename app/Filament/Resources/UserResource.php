@@ -28,32 +28,34 @@ class UserResource extends Resource
         return static::getModel()::count();
     }
 
-    
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Section::make()->schema([
-                Forms\Components\TextInput::make('name')
-                ->label('Nome')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                // Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->label('Senha')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
+                    Forms\Components\TextInput::make('name')
+                        ->label('Nome')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('email')
+                        ->email()
+                        ->required()
+                        ->maxLength(255),
+                    // Forms\Components\DateTimePicker::make('email_verified_at'),
+                    Forms\Components\TextInput::make('password')
+                        ->label('Senha')
+                        ->password()
+                        ->required()
+                        ->maxLength(255),
                     Select::make('roles')
-                    ->multiple()
-                    ->relationship('roles' ,'name')
-                    ->preload()
-                    ])
+                        ->multiple()
+                        ->relationship('roles', 'name', fn (Builder $query) => (
+                            auth()->user()->hasRole('Admin') ? null : $query->where('name', '!=', 'Admin')
+                        ))
+                        ->preload()
+                ])
                     ->columns(1)
             ]);
     }
@@ -67,7 +69,7 @@ class UserResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
-                ->label('Email')
+                    ->label('Email')
                     ->searchable(),
                 // Tables\Columns\TextColumn::make('email_verified_at')
                 //     ->dateTime()
@@ -75,7 +77,7 @@ class UserResource extends Resource
                 // Tables\Columns\ToggleColumn::make('is_admin')
                 // ->label('Administrador'),
                 Tables\Columns\TextColumn::make('created_at')
-                ->label('Data de Criação')
+                    ->label('Data de Criação')
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(),
@@ -103,5 +105,14 @@ class UserResource extends Resource
         return [
             'index' => Pages\ManageUsers::route('/'),
         ];
+    }
+        //
+    public static function getEloquentQuery(): Builder
+    {
+        return  auth()->user()->hasRole('Admin') 
+        ? parent::getEloquentQuery() :  parent::getEloquentQuery()->whereHas('roles', 
+        fn(Builder $query) => (
+            $query->where('name', '!=' , 'Admin')
+        )) ;
     }
 }
