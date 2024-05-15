@@ -49,12 +49,18 @@ class UserResource extends Resource
                         ->password()
                         ->required()
                         ->maxLength(255),
+                        Select::make('grupos')
+                        ->label('Grupo')
+                        ->required()
+                            ->relationship('grupos', 'titulo'),
                     Select::make('roles')
                         ->multiple()
+                        ->required()
                         ->relationship('roles', 'name', fn (Builder $query) => (
                             auth()->user()->hasRole('admin') ? null : $query->where('name', '!=', 'admin')
                         ))
-                        ->preload()
+                        ->preload(),
+
                 ])
                     ->columns(1)
             ]);
@@ -74,13 +80,17 @@ class UserResource extends Resource
                 // Tables\Columns\TextColumn::make('email_verified_at')
                 //     ->dateTime()
                 //     ->sortable(),
-                // Tables\Columns\ToggleColumn::make('is_admin')
-                // ->label('Administrador'),
+                Tables\Columns\TextColumn::make('grupos.titulo')
+                ->label('Grupo')
+                ->searchable(),
+                Tables\Columns\TextColumn::make('roles.name')
+                ->label('Regras')
+                ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Data de Criação')
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
@@ -106,13 +116,15 @@ class UserResource extends Resource
             'index' => Pages\ManageUsers::route('/'),
         ];
     }
-        //
+    //
     public static function getEloquentQuery(): Builder
     {
-        return  auth()->user()->hasRole('admin') 
-        ? parent::getEloquentQuery() :  parent::getEloquentQuery()->whereHas('roles', 
-        fn(Builder $query) => (
-            $query->where('name', '!=' , 'admin')
-        )) ;
+        return  auth()->user()->hasRole('admin')
+            ? parent::getEloquentQuery() :  parent::getEloquentQuery()->whereHas(
+                'roles',
+                fn (Builder $query) => (
+                    $query->where('name', '!=', 'admin')
+                )
+            );
     }
 }

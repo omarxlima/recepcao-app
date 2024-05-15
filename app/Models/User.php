@@ -55,6 +55,11 @@ class User extends Authenticatable  implements FilamentUser
         return $this->hasMany(Funcionario::class);
     }
 
+    public function grupos()
+    {
+        return $this->belongsTo(Grupo::class);
+    }
+
     // public function canAccessPanel(Panel $panel): bool
     // {
     //     return $this->hasRole('Admin');
