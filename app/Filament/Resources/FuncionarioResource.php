@@ -7,6 +7,7 @@ use App\Filament\Resources\FuncionarioResource\RelationManagers;
 use App\Models\Funcionario;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -53,16 +54,20 @@ class FuncionarioResource extends Resource
                     Forms\Components\TextInput::make('telefone')
                         ->tel()
                         ->maxLength(255),
-                        Forms\Components\TextInput::make('pis_pasep')
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('banco')
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('agencia')
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('conta')
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('tipo_conta'),
-                        ])->columns(3),
+                    Forms\Components\TextInput::make('pis_pasep')
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('banco')
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('agencia')
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('conta')
+                        ->maxLength(255),
+                    Select::make('tipo_conta')
+                        ->options([
+                            'CORRENTE' => 'CORRENTE',
+                            'POUPANÇA' => 'POUPANÇA',
+                        ]),
+                ])->columns(3),
                 Forms\Components\TextInput::make('email_funcional')
                     ->email()
                     ->required()
@@ -71,7 +76,7 @@ class FuncionarioResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
-             
+
                 Forms\Components\Toggle::make('ativo')
                     ->required(),
 
@@ -114,18 +119,18 @@ class FuncionarioResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('tipo_conta')
-                ->toggleable(isToggledHiddenByDefault: true),
-                
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\IconColumn::make('ativo')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
-                ->label('Data de Criação')
-                ->dateTime('d/m/y H:i')
+                    ->label('Data de Criação')
+                    ->dateTime('d/m/y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                ->label('Data de Atualização')
-                ->dateTime('d/m/y H:i')
+                    ->label('Data de Atualização')
+                    ->dateTime('d/m/y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
