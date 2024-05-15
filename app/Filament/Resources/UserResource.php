@@ -21,12 +21,12 @@ class UserResource extends Resource
     protected static ?string $modelLabel = 'Usuário';
     protected static ?string $pluralModelLabel = 'Usuários';
     protected static ?string $navigationIcon = 'heroicon-o-finger-print';
-    protected static ?string $navigationGroup = 'Administrador';
+    protected static ?string $navigationGroup = 'Usuários';
 
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
-    }
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return static::getModel()::count();
+    // }
 
 
 
@@ -52,7 +52,7 @@ class UserResource extends Resource
                     Select::make('roles')
                         ->multiple()
                         ->relationship('roles', 'name', fn (Builder $query) => (
-                            auth()->user()->hasRole('Admin') ? null : $query->where('name', '!=', 'Admin')
+                            auth()->user()->hasRole('admin') ? null : $query->where('name', '!=', 'admin')
                         ))
                         ->preload()
                 ])
@@ -109,10 +109,10 @@ class UserResource extends Resource
         //
     public static function getEloquentQuery(): Builder
     {
-        return  auth()->user()->hasRole('Admin') 
+        return  auth()->user()->hasRole('admin') 
         ? parent::getEloquentQuery() :  parent::getEloquentQuery()->whereHas('roles', 
         fn(Builder $query) => (
-            $query->where('name', '!=' , 'Admin')
+            $query->where('name', '!=' , 'admin')
         )) ;
     }
 }
