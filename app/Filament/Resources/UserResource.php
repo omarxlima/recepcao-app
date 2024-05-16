@@ -54,12 +54,16 @@ class UserResource extends Resource
                         ->required()
                             ->relationship('grupos', 'titulo'),
                     Select::make('roles')
+                        ->label('Função')
                         ->multiple()
                         ->required()
                         ->relationship('roles', 'name', fn (Builder $query) => (
                             auth()->user()->hasRole('admin') ? null : $query->where('name', '!=', 'admin')
                         ))
                         ->preload(),
+                        Forms\Components\Toggle::make('is_active')
+                        ->label('Ativo')
+                        ->required(),
 
                 ])
                     ->columns(1)
@@ -77,6 +81,8 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->label('Email')
                     ->searchable(),
+                    Tables\Columns\IconColumn::make('is_active')
+                    ->boolean(),
                 // Tables\Columns\TextColumn::make('email_verified_at')
                 //     ->dateTime()
                 //     ->sortable(),

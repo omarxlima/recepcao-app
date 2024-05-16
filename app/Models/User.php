@@ -24,7 +24,8 @@ class User extends Authenticatable  implements FilamentUser
         'name',
         'email',
         'password',
-        'is_admin'
+        'is_active',
+        'grupo_id'
     ];
 
     /**
@@ -45,6 +46,7 @@ class User extends Authenticatable  implements FilamentUser
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_active' => 'boolean',
     ];
 
     public function visitors(){
