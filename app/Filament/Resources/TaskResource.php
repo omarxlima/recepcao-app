@@ -42,7 +42,7 @@ class TaskResource extends Resource
                         ->required(),
                     Forms\Components\Select::make('task_group_id')
                         ->label('Status')
-                        ->searchable()
+                        // ->searchable()
                         ->relationship('taskGroup', 'title')
                         ->required(),
                     Forms\Components\TextInput::make('title')
@@ -64,11 +64,14 @@ class TaskResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
+                ->label('Título')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
+                ->label('Usuário')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('taskGroup.title')
+                ->label('Status')
                     ->searchable()
                     ->sortable()
                     ->badge()

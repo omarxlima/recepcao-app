@@ -82,6 +82,7 @@ class UserResource extends Resource
                     ->label('Email')
                     ->searchable(),
                     Tables\Columns\IconColumn::make('is_active')
+                    ->label('Ativo')
                     ->boolean(),
                 // Tables\Columns\TextColumn::make('email_verified_at')
                 //     ->dateTime()
@@ -107,7 +108,7 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

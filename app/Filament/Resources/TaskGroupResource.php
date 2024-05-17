@@ -29,9 +29,11 @@ class TaskGroupResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('title')
+                    ->label('Título')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Textarea::make('description')
+                    ->label('Descrição')
                     ->columnSpanFull(),
             ]);
     }
@@ -41,15 +43,19 @@ class TaskGroupResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
+                ->label('Título')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')
+                ->label('Descrição')
                     ->searchable()
                     ->limit(30),
                 Tables\Columns\TextColumn::make('created_at')
+                ->label('Criado em')
                     ->dateTime('d/m/y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                ->label('Atualizado em')
                     ->dateTime('d/m/y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

@@ -41,7 +41,7 @@ class FuncionarioResource extends Resource
                         ->maxLength(255),
                     Forms\Components\TextInput::make('cpf')
                         ->required()
-                        ->maxLength(255),
+                        ->maxLength(11),
                 ])->columns(2),
                 Grid::make()->schema([
 
@@ -52,10 +52,11 @@ class FuncionarioResource extends Resource
                     Forms\Components\TextInput::make('instituicao')
                         ->maxLength(255),
                     Forms\Components\TextInput::make('telefone')
-                        ->tel()
+                        ->mask('(99)99999-9999')
+                        ->placeholder('(99)99999-9999')
                         ->maxLength(255),
                     Forms\Components\TextInput::make('pis_pasep')
-                        ->maxLength(255),
+                        ->maxLength(11),
                     Forms\Components\TextInput::make('banco')
                         ->maxLength(255),
                     Forms\Components\TextInput::make('agencia')
@@ -87,7 +88,8 @@ class FuncionarioResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image')
+                ->circular(),
                 Tables\Columns\TextColumn::make('nome')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('cpf')
@@ -139,7 +141,7 @@ class FuncionarioResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
