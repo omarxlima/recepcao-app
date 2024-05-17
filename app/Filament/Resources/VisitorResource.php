@@ -12,6 +12,7 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Forms\Components\View;
+use Filament\Forms\Components\ViewField;
 use Filament\Infolists;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -34,9 +35,12 @@ class VisitorResource extends Resource
     {
         return $form
             ->schema([
+
+                ViewField::make('Web Can')
+                    ->view('forms.components.web-can'),
                 Forms\Components\FileUpload::make('image')
                     ->label('Imagem')
-                    ->columnSpan(2)
+                    ->columnSpan(1)
                     ->image(),
                 Grid::make()->schema([
                     Forms\Components\TextInput::make('name')
@@ -67,9 +71,9 @@ class VisitorResource extends Resource
                     //     ->required()
                     //     ->maxLength(255),
                     Forms\Components\Select::make('funcionario_id')
-                    ->label('Interlocutor')
-                    ->relationship('funcionario', 'nome')
-                    ->required(),
+                        ->label('Interlocutor')
+                        ->relationship('funcionario', 'nome')
+                        ->required(),
                     Forms\Components\DateTimePicker::make('date_time')
                         ->label('Data Hora')
                         ->seconds(false)
@@ -89,7 +93,7 @@ class VisitorResource extends Resource
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Imagem')
                     ->circular(),
-            
+
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nome')
                     ->searchable(),
@@ -142,21 +146,21 @@ class VisitorResource extends Resource
     {
         return $infolist
             ->schema([
-                    Infolists\Components\ImageEntry::make('image')
+                Infolists\Components\ImageEntry::make('image')
                     ->label('Imagem')
                     ->circular(),
-                    Infolists\Components\TextEntry::make('name'),
-                    Infolists\Components\TextEntry::make('cpf'),
-                    Infolists\Components\TextEntry::make('registration'),
-                    Infolists\Components\TextEntry::make('telephone'),
-                    Infolists\Components\TextEntry::make('function'),
-                    Infolists\Components\TextEntry::make('capacity'),
-                    Infolists\Components\TextEntry::make('interlocutor'),
-                    Infolists\Components\TextEntry::make('date_time')
+                Infolists\Components\TextEntry::make('name'),
+                Infolists\Components\TextEntry::make('cpf'),
+                Infolists\Components\TextEntry::make('registration'),
+                Infolists\Components\TextEntry::make('telephone'),
+                Infolists\Components\TextEntry::make('function'),
+                Infolists\Components\TextEntry::make('capacity'),
+                Infolists\Components\TextEntry::make('interlocutor'),
+                Infolists\Components\TextEntry::make('date_time')
 
 
-                        ->columnSpanFull(),
-                ]);
+                    ->columnSpanFull(),
+            ]);
     }
 
     public static function getPages(): array
