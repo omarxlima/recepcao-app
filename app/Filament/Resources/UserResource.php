@@ -21,7 +21,7 @@ class UserResource extends Resource
     protected static ?string $modelLabel = 'Usuário';
     protected static ?string $pluralModelLabel = 'Usuários';
     protected static ?string $navigationIcon = 'heroicon-o-finger-print';
-    protected static ?string $navigationGroup = 'Usuários';
+    // protected static ?string $navigationGroup = 'Usuários';
 
     // public static function getNavigationBadge(): ?string
     // {
@@ -55,7 +55,7 @@ class UserResource extends Resource
                             ->relationship('grupos', 'titulo'),
                     Select::make('roles')
                         ->label('Função')
-                        ->multiple()
+                        // ->multiple()
                         ->required()
                         ->relationship('roles', 'name', fn (Builder $query) => (
                             auth()->user()->hasRole('admin') ? null : $query->where('name', '!=', 'admin')

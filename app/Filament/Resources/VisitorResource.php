@@ -29,7 +29,7 @@ class VisitorResource extends Resource
     protected static ?string $modelLabel = 'Visitante';
     protected static ?string $pluralModelLabel = 'Visitantes';
     protected static ?string $navigationIcon = 'heroicon-o-hand-raised';
-    protected static ?string $navigationGroup = 'Recepção';
+    // protected static ?string $navigationGroup = 'Recepção';
 
     public static function form(Form $form): Form
     {
