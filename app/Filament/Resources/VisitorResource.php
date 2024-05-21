@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\VisitorResource\Pages;
 use App\Filament\Resources\VisitorResource\RelationManagers;
+use App\Forms\Components\webCam;
 use App\Models\Visitor;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
@@ -26,11 +27,10 @@ class VisitorResource extends Resource
     {
         return $form
             ->schema([
-                // ViewField::make('Web Can')
-                // ->view('forms.components.web-can'),
+                webCam::make('webcam_image')
+                ->label('Webcam Image'),
             Forms\Components\FileUpload::make('foto')
             ->image()
-            ->required()
             ->getUploadedFileNameForStorageUsing(fn (Forms\Components\FileUpload $component, $file): string => $file->store('uploads/images'))
                 ->columnSpan(1),
             Grid::make()->schema([
