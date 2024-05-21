@@ -9,7 +9,18 @@ class Visitor extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'user_id',
+        'funcionario_id',
+        'name',
+        'cpf',
+        'registration',
+        'telephone',
+        'function',
+        'capacity',
+        'interlocutor',
+        'date_time'
+    ];
 
     public function user(){
         return $this->belongsTo(User::class);
@@ -22,6 +33,15 @@ class Visitor extends Model
     public function foto()
     {
         return $this->hasMany(Foto::class);
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            if (auth()->check()) {
+                $model->user_id = auth()->id();
+            }
+        });
     }
 
 }

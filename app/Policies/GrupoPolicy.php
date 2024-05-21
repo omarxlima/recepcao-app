@@ -19,10 +19,10 @@ class GrupoPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Grupo $grupo): bool
-    {
-        return $user->group_id === $grupo->group_id;
-    }
+    // public function view(User $user, Grupo $grupo): bool
+    // {
+    //     return $user->group_id === $grupo->group_id;
+    // }
 
     /**
      * Determine whether the user can create models.
