@@ -7,8 +7,12 @@ use App\Filament\Resources\VisitorResource\RelationManagers;
 use App\Forms\Components\webCam;
 use App\Models\Visitor;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -27,12 +31,36 @@ class VisitorResource extends Resource
     {
         return $form
             ->schema([
-                webCam::make('webcam_image')
-                ->label('Webcam Image'),
-            Forms\Components\FileUpload::make('foto')
+                // inicio select da web cam ou imagem do pc
+                Select::make('type')
+                ->options([
+                    'webcam' => 'Webcam Image',
+                    'imagem' => 'Imagem',
+                ])
+                ->live()
+                ->afterStateUpdated(fn (Select $component) => $component
+                    ->getContainer()
+                    ->getComponent('dynamicTypeFields')
+                    ->getChildComponentContainer()
+                    ->fill()),
+                
+            Grid::make(2)
+                ->schema(fn (Get $get):array => match ($get('type')) {
+                    'webcam' => [
+                            webCam::make('webcam_image')
+                            // ->label('Webcam Image'),
+                    ],
+                    'imagem' => [
+                       FileUpload::make('foto')
             ->image()
-            ->getUploadedFileNameForStorageUsing(fn (Forms\Components\FileUpload $component, $file): string => $file->store('uploads/images'))
+            // ->getUploadedFileNameForStorageUsing(fn (Forms\Components\FileUpload $component, $file): string => $file->store('uploads/images'))
                 ->columnSpan(1),
+                    ],
+                    default => [],
+                })
+                ->key('dynamicTypeFields'),
+              
+            
             Grid::make()->schema([
                 Forms\Components\TextInput::make('name')
                     ->label('Nome')

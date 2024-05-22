@@ -1,38 +1,34 @@
-{{-- <x-dynamic-component
-    :component="$getFieldWrapperView()"
-    :field="$field"
->
+{{-- <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
     <div x-data="{ state: $wire.$entangle('{{ $getStatePath() }}') }">
 
         <!-- Interact with the `state` property in Alpine.js -->
-    
-            <video x-ref="video" width="640" height="480" autoplay></video>
-          
-   
+
+        <video x-ref="video" width="640" height="480" autoplay></video>
+
+
     </div>
 
-  
+
 
     <script type="text/javascript">
         console.log('executing js here..')
        
     </script>
 
-   
+
 </x-dynamic-component> --}}
 
 <div>
     <video id="video" autoplay></video>
-    <img src=""  id="img" alt="">
+    <img src="" id="img" alt="">
     <button id="capture">Capturar</button>
     <canvas id="canvas" style="display: none;"></canvas>
     <input type="hidden" id="webcam_image" name="{{ $getStatePath() }}">
 
     <script>
+        // const cameraUser = await navigator.mediaDevices.getUserMedia({ video:true, audio:false });
 
-// const cameraUser = await navigator.mediaDevices.getUserMedia({ video:true, audio:false });
-
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {}
             var video = document.getElementById('video');
             var canvas = document.getElementById('canvas');
             var context = canvas.getContext('2d');
@@ -73,15 +69,15 @@
                         stream.getTracks().forEach(track => track.stop());
                     })
                 })
-                .catch(function(err) {
-                    console.error("Erro: " + err);
-                });
+                // .catch(function(err) {
+                //     console.error("Erro: " + err);
+                // });
 
-                function ocultarVideo() {
-            document.querySelector('#img').classList.remove('d-none');
-            document.querySelector('video').classList.add('d-none');
-        }
+            
+                        function ocultarVideo() {
+                    document.querySelector('#img').classList.remove('d-none');
+                    document.querySelector('video').classList.add('d-none');
+                }
 
-        });
     </script>
 </div>
