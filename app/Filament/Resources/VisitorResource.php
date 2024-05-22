@@ -59,8 +59,7 @@ class VisitorResource extends Resource
                     default => [],
                 })
                 ->key('dynamicTypeFields'),
-              
-            
+               
             Grid::make()->schema([
                 Forms\Components\TextInput::make('name')
                     ->label('Nome')
