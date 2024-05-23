@@ -38,7 +38,7 @@ class TaskResource extends Resource
                     Forms\Components\Select::make('user_id')
                         ->label('Usuário')
                         ->relationship('user', 'name')
-                        ->searchable()
+                        // ->searchable()
                         ->required(),
                     Forms\Components\Select::make('task_group_id')
                         ->label('Status')
