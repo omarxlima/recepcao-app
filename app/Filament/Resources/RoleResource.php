@@ -21,7 +21,7 @@ class RoleResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $modelLabel = 'Função';
     protected static ?string $pluralModelLabel = 'Funções';
-    protected static ?string $navigationGroup = 'Configurações Adm';
+    protected static ?string $navigationGroup = 'Configurações';
 
     
 

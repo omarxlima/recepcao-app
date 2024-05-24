@@ -21,6 +21,8 @@ class UserResource extends Resource
     protected static ?string $modelLabel = 'Usuário';
     protected static ?string $pluralModelLabel = 'Usuários';
     protected static ?string $navigationIcon = 'heroicon-o-finger-print';
+    protected static ?string $navigationGroup = 'Configurações';
+
     // protected static ?string $navigationGroup = 'Usuários';
 
     // public static function getNavigationBadge(): ?string

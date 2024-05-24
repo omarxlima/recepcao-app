@@ -21,7 +21,7 @@ class FuncionarioResource extends Resource
     protected static ?string $modelLabel = 'Funcionário';
     protected static ?string $pluralModelLabel = 'Funcionários';
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static ?string $navigationGroup = 'RH';
+    protected static ?string $navigationGroup = 'Identificação';
 
 
     public static function form(Form $form): Form
