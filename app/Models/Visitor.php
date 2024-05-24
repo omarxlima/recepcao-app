@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\UserTrait\Multilocatario;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Visitor extends Model
 {
-    use HasFactory;
+    use HasFactory, Multilocatario;
 
     protected $fillable = [
         'user_id',

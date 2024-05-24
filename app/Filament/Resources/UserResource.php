@@ -52,7 +52,7 @@ class UserResource extends Resource
                         Select::make('grupos')
                         ->label('Grupo')
                         ->required()
-                            ->relationship('grupos', 'titulo'),
+                            ->relationship('grupo', 'titulo'),
                     Select::make('roles')
                         ->label('Função')
                         // ->multiple()
@@ -87,7 +87,7 @@ class UserResource extends Resource
                 // Tables\Columns\TextColumn::make('email_verified_at')
                 //     ->dateTime()
                 //     ->sortable(),
-                Tables\Columns\TextColumn::make('grupos.titulo')
+                Tables\Columns\TextColumn::make('grupo.titulo')
                 ->label('Grupo')
                 ->searchable(),
                 Tables\Columns\TextColumn::make('roles.name')

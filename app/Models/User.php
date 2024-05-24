@@ -57,7 +57,7 @@ class User extends Authenticatable  implements FilamentUser
         return $this->hasMany(Funcionario::class);
     }
 
-    public function grupos()
+    public function grupo()
     {
         return $this->belongsTo(Grupo::class);
     }
@@ -67,9 +67,14 @@ class User extends Authenticatable  implements FilamentUser
     //     return $this->hasRole('Admin');
     // }
 
-        public function canAccessPanel(Panel $panel): bool
+    //     public function canAccessPanel(Panel $panel): bool
+    // {
+    //     return $this->hasPermissionTo('access-admin');
+    // }
+
+    public function canAccessPanel(Panel $panel): bool
     {
-        return $this->hasPermissionTo('access-admin');
+        return true;
     }
 
 }

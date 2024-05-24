@@ -51,7 +51,7 @@ class VisitorResource extends Resource
                             // ->label('Webcam Image'),
                     ],
                     'imagem' => [
-                       FileUpload::make('foto')
+                       FileUpload::make('image')
             ->image()
             // ->getUploadedFileNameForStorageUsing(fn (Forms\Components\FileUpload $component, $file): string => $file->store('uploads/images'))
                 ->columnSpan(1),
@@ -105,9 +105,11 @@ class VisitorResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('foto.path')
-                ->label('Imagem')
+                Tables\Columns\ImageColumn::make('image')
                 ->circular(),
+                // Tables\Columns\ImageColumn::make('foto.path')
+                // ->label('Imagem')
+                // ->circular(),
 
             Tables\Columns\TextColumn::make('name')
                 ->label('Nome')
