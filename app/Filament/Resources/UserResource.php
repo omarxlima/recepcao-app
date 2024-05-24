@@ -63,8 +63,9 @@ class UserResource extends Resource
                             auth()->user()->hasRole('admin') ? null : $query->where('name', '!=', 'admin')
                         ))
                         ->preload(),
-                        Forms\Components\Toggle::make('is_active')
+                        Forms\Components\Toggle::make('ativo')
                         ->label('Ativo')
+                        ->accepted()
                         ->required(),
 
                 ])
@@ -83,7 +84,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->label('Email')
                     ->searchable(),
-                    Tables\Columns\IconColumn::make('is_active')
+                    Tables\Columns\IconColumn::make('ativo')
                     ->label('Ativo')
                     ->boolean(),
                 // Tables\Columns\TextColumn::make('email_verified_at')

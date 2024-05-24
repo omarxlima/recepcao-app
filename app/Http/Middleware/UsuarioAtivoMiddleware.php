@@ -15,7 +15,7 @@ class UsuarioAtivoMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->check() && !auth()->user()->is_active) {
+        if(auth()->check() && !auth()->user()->ativo) {
             auth()->logout();
             return redirect()->route('filament.admin.auth.login')->withErrors(['email' => 'Sua conta não está ativa']);
         }
