@@ -8,6 +8,12 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditVisitor extends EditRecord
 {
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    
     protected static string $resource = VisitorResource::class;
 
     protected function getHeaderActions(): array
