@@ -28,8 +28,6 @@ class FuncionarioResource extends Resource
     {
         return $form
             ->schema([
-
-
                 Forms\Components\FileUpload::make('image')
                     ->label('Imagem')
                     ->columnSpan(2)
@@ -44,7 +42,6 @@ class FuncionarioResource extends Resource
                         ->maxLength(11),
                 ])->columns(2),
                 Grid::make()->schema([
-
                     Forms\Components\TextInput::make('cargo')
                         ->maxLength(255),
                     Forms\Components\TextInput::make('matricula')

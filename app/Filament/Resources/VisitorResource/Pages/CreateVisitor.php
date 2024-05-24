@@ -28,14 +28,14 @@ class CreateVisitor extends CreateRecord
         ];
     }
 
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        if (isset($data['image'])) {
-            $image = Foto::create(['path' => $data['foto']]);
-            $data['visitor_id'] = $image->id;
-            unset($data['foto']);
-        }
+    // protected function mutateFormDataBeforeCreate(array $data): array
+    // {
+    //     if (isset($data['image'])) {
+    //         $image = Foto::create(['path' => $data['foto']]);
+    //         $data['visitor_id'] = $image->id;
+    //         unset($data['foto']);
+    //     }
 
-        return $data;
-    }
+    //     return $data;
+    // }
 }
