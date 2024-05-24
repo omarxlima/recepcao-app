@@ -12,12 +12,13 @@ trait Multilocatario
     {
         if (auth()->check()) {
             static::creating(function ($model) {
+                // $model->user_id = auth()->id();
                 $model->grupo_id = auth()->user()->grupo_id;
             });
         }
  
         static::addGlobalScope('created_by_grupo_id', function (Builder $builder) {
-            $builder->where('grupo_id', auth()->id());
+            $builder->where('grupo_id', auth()->user()->grupo_id);
         });
     }
 }
