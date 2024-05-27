@@ -40,16 +40,20 @@ class FuncionarioResource extends Resource
                 Grid::make()->schema([
 
                     Forms\Components\TextInput::make('nome')
+                        ->minLength(3)
                         ->required()
                         ->maxLength(255),
                     Forms\Components\TextInput::make('cpf')
+                        ->mask('999.999.999-99')
+                        ->placeholder('999.999.999-99')
                         ->required()
-                        ->maxLength(11),
+                        ->maxLength(14),
                 ])->columns(2),
                 Grid::make()->schema([
                     Forms\Components\TextInput::make('cargo')
                         ->maxLength(255),
                     Forms\Components\TextInput::make('matricula')
+                        ->numeric()
                         ->maxLength(255),
                     Forms\Components\TextInput::make('instituicao')
                         ->maxLength(255),
@@ -58,12 +62,15 @@ class FuncionarioResource extends Resource
                         ->placeholder('(99)99999-9999')
                         ->maxLength(255),
                     Forms\Components\TextInput::make('pis_pasep')
+                        ->numeric()
                         ->maxLength(11),
                     Forms\Components\TextInput::make('banco')
                         ->maxLength(255),
                     Forms\Components\TextInput::make('agencia')
+                        ->numeric()
                         ->maxLength(255),
                     Forms\Components\TextInput::make('conta')
+                        ->numeric()
                         ->maxLength(255),
                     Select::make('tipo_conta')
                         ->options([
@@ -91,7 +98,8 @@ class FuncionarioResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
-                ->circular(),
+                    ->label('Imagem')
+                    ->circular(),
                 Tables\Columns\TextColumn::make('nome')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('cpf')
@@ -162,48 +170,47 @@ class FuncionarioResource extends Resource
     }
 
 
-public static function infolist(Infolist $infolist): Infolist
-{
-    return $infolist
-        ->schema([
-            Section::make([
-                ImageEntry::make('image')
-                    ->label('Imagem')
-            ])
-            ->columnSpan(1),
-            Section::make([
-                Group::make([
-                    TextEntry::make('nome')
-                        ->label('Nome:')
-                        ->weight('bold'),
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make([
+                    ImageEntry::make('image')
+                        ->label('Imagem')
+                ])
+                    ->columnSpan(1),
+                Section::make([
+                    Group::make([
+                        TextEntry::make('nome')
+                            ->label('Nome:')
+                            ->weight('bold'),
                         TextEntry::make('cpf')
-                        ->label('CPF:'),
+                            ->label('CPF:'),
                         TextEntry::make('cargo')
-                        ->label('Cargo:'),
+                            ->label('Cargo:'),
                         TextEntry::make('instituicao')
-                        ->label('Instituição:'),
+                            ->label('Instituição:'),
                         TextEntry::make('email_funcional')
-                        ->label('Email Funcional:'),
+                            ->label('Email Funcional:'),
                         TextEntry::make('email_pessoal')
-                        ->label('Email Pessoal:'),
+                            ->label('Email Pessoal:'),
                         TextEntry::make('pis_pasep')
-                        ->label('PIS/PASEP:'),
+                            ->label('PIS/PASEP:'),
                         TextEntry::make('banco')
-                        ->label('Banco:'),
+                            ->label('Banco:'),
                         TextEntry::make('agencia')
-                        ->label('Agencia:'),
+                            ->label('Agencia:'),
                         TextEntry::make('conta')
-                        ->label('Conta:'),
+                            ->label('Conta:'),
                         TextEntry::make('tipo_conta')
-                        ->label('PIS/PASEP:'),
+                            ->label('PIS/PASEP:'),
                         TextEntry::make('banco')
-                        ->label('Banco:'),
-                ])->columns(2)
-            ])
-            ->columnSpan(2),
+                            ->label('Banco:'),
+                    ])->columns(2)
+                ])
+                    ->columnSpan(2),
 
-        ])
-        ->columns(3)
-        ;
-}
+            ])
+            ->columns(3);
+    }
 }

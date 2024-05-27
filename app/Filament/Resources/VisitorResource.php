@@ -43,6 +43,7 @@ class VisitorResource extends Resource
             ->schema([
                 // inicio select da web cam ou imagem do pc
                 Select::make('type')
+                    ->label(    'Fonte da Imagem')
                     ->options([
                         'webcam' => 'Webcam Image',
                         'image' => 'Imagem',
@@ -58,23 +59,23 @@ class VisitorResource extends Resource
                     ->schema(fn (Get $get): array => match ($get('type')) {
                         'webcam' => [
                             webCam::make('webcam_image')
-                            ->imageEditor()
+                                ->imageEditor()
 
-                            // ->label('Webcam Image'),
+                            ->label('Webcam Image'),
                         ],
-                        // 'image' => [
-                        //     FileUpload::make('image')
-                        //         ->imageEditor()
-                        //         ->image()
-                        //         // ->getUploadedFileNameForStorageUsing(fn (Forms\Components\FileUpload $component, $file): string => $file->store('uploads/images'))
-                        //         ->columnSpan(1),
-                        // ],
+                         'image' => [
+                                 FileUpload::make('image')
+                                   ->imageEditor()
+                                   ->image(),
+                                   // ->getUploadedFileNameForStorageUsing(fn (Forms\Components\FileUpload $component, $file): string => $file->store('uploads/images'))
+                            //         ->columnSpan(1),
+                            ],
                         default => [],
                     })
                     ->key('dynamicTypeFields'),
-                    Forms\Components\FileUpload::make('image')
-                    ->imageEditor()
-                    ->image(),
+                // Forms\Components\FileUpload::make('image')
+                //     ->imageEditor()
+                //     ->image(),
                 Grid::make()->schema([
                     Forms\Components\TextInput::make('name')
                         ->label('Nome')
@@ -82,10 +83,13 @@ class VisitorResource extends Resource
                         ->maxLength(190),
                     Forms\Components\TextInput::make('cpf')
                         ->label('CPF')
+                        ->mask('999.999.999-99')
+                        ->placeholder('999.999.999-99')
                         ->required()
-                        ->maxLength(11),
+                        ->maxLength(14),
                     Forms\Components\TextInput::make('registration')
                         ->label('Matrícula')
+                        ->integer()
                         ->maxLength(255),
                     Forms\Components\TextInput::make('telephone')
                         ->label('Telefone')
@@ -121,8 +125,8 @@ class VisitorResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
-                ->label('Imagem')
-                ->circular(),
+                    ->label('Imagem')
+                    ->circular(),
                 // Tables\Columns\ImageColumn::make('foto.path')
                 // ->label('Imagem')
                 // ->circular(),
@@ -164,22 +168,20 @@ class VisitorResource extends Resource
                 //
             ])
             ->actions([
-                
+
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ReplicateAction::make()
-                ->successRedirectUrl(fn (Model $replica): string => route('visitors.edit', [
-                    'visitor' => $replica,
-                ]))
+                    ->successRedirectUrl(fn (Model $replica): string => route('visitors.edit', [
+                        'visitor' => $replica,
+                    ]))
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->headerActions([
-                
-            ]);
+            ->headerActions([]);
     }
 
     public static function getRelations(): array
@@ -200,42 +202,41 @@ class VisitorResource extends Resource
         ];
     }
 
- 
-public static function infolist(Infolist $infolist): Infolist
-{
-    return $infolist
-        ->schema([
-            Section::make([
-                ImageEntry::make('image')
-            ])
-            ->columnSpan(1),
-            Section::make([
-                Group::make([
-                    TextEntry::make('name')
-                        ->label('Nome:')
-                        ->weight('bold'),
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make([
+                    ImageEntry::make('image')
+                ])
+                    ->columnSpan(1),
+                Section::make([
+                    Group::make([
+                        TextEntry::make('name')
+                            ->label('Nome:')
+                            ->weight('bold'),
                         TextEntry::make('cpf')
-                        ->label('CPF:'),
+                            ->label('CPF:'),
                         TextEntry::make('registration')
-                        ->label('Matrícula:'),
+                            ->label('Matrícula:'),
                         TextEntry::make('telephone')
-                        ->label('Telefone:'),
+                            ->label('Telefone:'),
                         TextEntry::make('function')
-                        ->label('Função:'),
+                            ->label('Função:'),
                         TextEntry::make('capacity')
-                        ->label('Orgão Lotação:'),
+                            ->label('Orgão Lotação:'),
                         TextEntry::make('interlocutor')
-                        ->label('Interlocutor:'),
+                            ->label('Interlocutor:'),
                         TextEntry::make('created_at')
-                        ->label('Criado Em:')
-                        ->date('d/m/Y'),
+                            ->label('Criado Em:')
+                            ->date('d/m/Y'),
 
-                ])->columns(2)
+                    ])->columns(2)
+                ])
+                    ->columnSpan(2),
+
             ])
-            ->columnSpan(2),
-
-        ])
-        ->columns(3)
-        ;
-}
+            ->columns(3);
+    }
 }
