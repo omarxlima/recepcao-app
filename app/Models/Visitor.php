@@ -12,6 +12,7 @@ class Visitor extends Model
 
     protected $fillable = [
         'user_id',
+        'image',
         'funcionario_id',
         'name',
         'cpf',

@@ -28,6 +28,6 @@ x-load-js="[@js(\Filament\Support\Facades\FilamentAsset::getScriptSrc('webcam-sc
 <img src="" id="img" alt="">
 <button id="capture">Capturar</button>
 <canvas id="canvas" style="display: none;"></canvas>
-<input type="hidden" id="webcam_image" name="{{ $getStatePath() }}">
+<input type="hidden" id="image" name="{{ $getStatePath() }}">
 <!-- ... -->
 </div>

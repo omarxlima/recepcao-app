@@ -13,11 +13,11 @@ class webCam extends FileUpload
         parent::setUp();
 
         $this->afterStateHydrated(function (Webcam $component, $state) {
-            $component->statePath('webcam_image');
+            $component->statePath('image');
         });
 
         $this->saveUploadedFileUsing(function ($file) {
-            return $file->storePublicly('webcam_images', ['disk' => 'public']);
+            return $file->storePublicly( ['disk' => 'public']);
         });
 
         $this->view('forms.components.web-cam');

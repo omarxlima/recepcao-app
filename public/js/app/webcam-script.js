@@ -1,10 +1,10 @@
 
 
 var video = document.getElementById('video');
-var canvas = document.getElementById('canvas');
-var context = canvas.getContext('2d');
+// var canvas = document.getElementById('canvas');
+// var context = canvas.getContext('2d');
 var captureButton = document.getElementById('capture');
-var webcamImageInput = document.getElementById('webcam_image');
+var webcamImageInput = document.getElementById('image');
 
 navigator.mediaDevices.getUserMedia({ video: true })
     .then(function(stream) {
@@ -33,7 +33,7 @@ navigator.mediaDevices.getUserMedia({ video: true })
                 reader.readAsDataURL(file);
                 const data = new DataTransfer();
                 data.items.add(file);
-                document.getElementById('webcam_image').files = data.files;
+                document.getElementById('image').files = data.files;
 
 
             });

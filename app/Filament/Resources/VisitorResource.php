@@ -58,7 +58,7 @@ class VisitorResource extends Resource
                 Grid::make(2)
                     ->schema(fn (Get $get): array => match ($get('type')) {
                         'webcam' => [
-                            webCam::make('webcam_image')
+                            webCam::make('image')
                                 ->imageEditor()
 
                             ->label('Webcam Image'),
@@ -209,6 +209,7 @@ class VisitorResource extends Resource
             ->schema([
                 Section::make([
                     ImageEntry::make('image')
+                    ->label('Imagem:')
                 ])
                     ->columnSpan(1),
                 Section::make([
