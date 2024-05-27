@@ -10,6 +10,7 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Group;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -176,7 +177,11 @@ class FuncionarioResource extends Resource
             ->schema([
                 Section::make([
                     ImageEntry::make('image')
-                        ->label('Imagem')
+                        ->label('Imagem'),
+                        IconEntry::make('ativo')
+                        ->boolean()
+                        ->trueColor('success')
+                        ->falseColor('danger')
                 ])
                     ->columnSpan(1),
                 Section::make([
