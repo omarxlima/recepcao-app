@@ -14,10 +14,10 @@ class StatsAdminOverview extends BaseWidget
     {
         return [
             
-            Stat::make('Usuários', User::query()->count())
-                ->description('Todos usuários')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->color('success'),
+            // Stat::make('Usuários', User::query()->count())
+            //     ->description('Todos usuários')
+            //     ->descriptionIcon('heroicon-m-arrow-trending-up')
+            //     ->color('success'),
             Stat::make('Funcionários', Funcionario::query()->count())
                 ->description('Todos funcionários')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
