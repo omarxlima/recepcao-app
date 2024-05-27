@@ -13,6 +13,7 @@ class StatsAdminOverview extends BaseWidget
     protected function getStats(): array
     {
         return [
+            
             Stat::make('Usuários', User::query()->count())
                 ->description('Todos usuários')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')

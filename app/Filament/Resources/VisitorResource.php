@@ -6,6 +6,7 @@ use App\Filament\Resources\VisitorResource\Pages;
 use App\Filament\Resources\VisitorResource\RelationManagers;
 use App\Forms\Components\webCam;
 use App\Models\Visitor;
+use Dompdf\FrameDecorator\Text;
 use Filament\Actions\ReplicateAction;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
@@ -14,6 +15,11 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Infolists\Components\Group;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -159,6 +165,7 @@ class VisitorResource extends Resource
             ])
             ->actions([
                 
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ReplicateAction::make()
                 ->successRedirectUrl(fn (Model $replica): string => route('visitors.edit', [
@@ -192,4 +199,43 @@ class VisitorResource extends Resource
 
         ];
     }
+
+ 
+public static function infolist(Infolist $infolist): Infolist
+{
+    return $infolist
+        ->schema([
+            Section::make([
+                ImageEntry::make('image')
+            ])
+            ->columnSpan(1),
+            Section::make([
+                Group::make([
+                    TextEntry::make('name')
+                        ->label('Nome:')
+                        ->weight('bold'),
+                        TextEntry::make('cpf')
+                        ->label('CPF:'),
+                        TextEntry::make('registration')
+                        ->label('Matrícula:'),
+                        TextEntry::make('telephone')
+                        ->label('Telefone:'),
+                        TextEntry::make('function')
+                        ->label('Função:'),
+                        TextEntry::make('capacity')
+                        ->label('Orgão Lotação:'),
+                        TextEntry::make('interlocutor')
+                        ->label('Interlocutor:'),
+                        TextEntry::make('created_at')
+                        ->label('Criado Em:')
+                        ->date('d/m/Y'),
+
+                ])->columns(2)
+            ])
+            ->columnSpan(2),
+
+        ])
+        ->columns(3)
+        ;
+}
 }

@@ -9,6 +9,11 @@ use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Group;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -137,6 +142,8 @@ class FuncionarioResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
+
                 Tables\Actions\EditAction::make(),
                 // Tables\Actions\DeleteAction::make(),
             ])
@@ -153,4 +160,50 @@ class FuncionarioResource extends Resource
             'index' => Pages\ManageFuncionarios::route('/'),
         ];
     }
+
+
+public static function infolist(Infolist $infolist): Infolist
+{
+    return $infolist
+        ->schema([
+            Section::make([
+                ImageEntry::make('image')
+                    ->label('Imagem')
+            ])
+            ->columnSpan(1),
+            Section::make([
+                Group::make([
+                    TextEntry::make('nome')
+                        ->label('Nome:')
+                        ->weight('bold'),
+                        TextEntry::make('cpf')
+                        ->label('CPF:'),
+                        TextEntry::make('cargo')
+                        ->label('Cargo:'),
+                        TextEntry::make('instituicao')
+                        ->label('Instituição:'),
+                        TextEntry::make('email_funcional')
+                        ->label('Email Funcional:'),
+                        TextEntry::make('email_pessoal')
+                        ->label('Email Pessoal:'),
+                        TextEntry::make('pis_pasep')
+                        ->label('PIS/PASEP:'),
+                        TextEntry::make('banco')
+                        ->label('Banco:'),
+                        TextEntry::make('agencia')
+                        ->label('Agencia:'),
+                        TextEntry::make('conta')
+                        ->label('Conta:'),
+                        TextEntry::make('tipo_conta')
+                        ->label('PIS/PASEP:'),
+                        TextEntry::make('banco')
+                        ->label('Banco:'),
+                ])->columns(2)
+            ])
+            ->columnSpan(2),
+
+        ])
+        ->columns(3)
+        ;
+}
 }
