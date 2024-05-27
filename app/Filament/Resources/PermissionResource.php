@@ -20,7 +20,7 @@ class PermissionResource extends Resource
 
     protected static ?string $modelLabel = 'Permissão';
     protected static ?string $pluralModelLabel = 'Permissões';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-shield-check';
     protected static ?string $navigationGroup = 'Configurações';
 
 

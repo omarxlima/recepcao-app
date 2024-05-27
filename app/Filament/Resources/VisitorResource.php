@@ -31,7 +31,7 @@ class VisitorResource extends Resource
 {
     protected static ?string $model = Visitor::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-hand-raised';
     protected static ?string $modelLabel = 'Visitante';
     protected static ?string $pluralModelLabel = 'Visitantes';
     protected static ?string $navigationGroup = 'Identificação';
