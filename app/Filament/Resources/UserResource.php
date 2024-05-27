@@ -7,6 +7,7 @@ use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -20,38 +21,54 @@ class UserResource extends Resource
     protected static ?string $modelLabel = 'Usuário';
     protected static ?string $pluralModelLabel = 'Usuários';
     protected static ?string $navigationIcon = 'heroicon-o-finger-print';
-    protected static ?string $navigationGroup = 'Administrador';
+    protected static ?string $navigationGroup = 'Configurações';
 
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
-    }
+    // protected static ?string $navigationGroup = 'Usuários';
 
-    
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return static::getModel()::count();
+    // }
+
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Section::make()->schema([
-                Forms\Components\TextInput::make('name')
-                ->label('Nome')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                // Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->label('Senha')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Toggle::make('is_admin')
-                ->label('Administrador')
-                    ->required(),
-                    ])
+                    Forms\Components\TextInput::make('name')
+                        ->label('Nome')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('email')
+                        ->email()
+                        ->required()
+                        ->maxLength(255),
+                    // Forms\Components\DateTimePicker::make('email_verified_at'),
+                    Forms\Components\TextInput::make('password')
+                        ->label('Senha')
+                        ->password()
+                        ->required()
+                        ->maxLength(255),
+                        Select::make('grupos')
+                        ->label('Grupo')
+                        ->required()
+                            ->relationship('grupo', 'titulo'),
+                    Select::make('roles')
+                        ->label('Função')
+                        // ->multiple()
+                        ->required()
+                        ->relationship('roles', 'name', fn (Builder $query) => (
+                            auth()->user()->hasRole('admin') ? null : $query->where('name', '!=', 'admin')
+                        ))
+                        ->preload(),
+                        Forms\Components\Toggle::make('ativo')
+                        ->label('Ativo')
+                        ->accepted()
+                        ->required(),
+
+                ])
                     ->columns(1)
             ]);
     }
@@ -65,18 +82,25 @@ class UserResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
-                ->label('Email')
+                    ->label('Email')
                     ->searchable(),
+                    Tables\Columns\IconColumn::make('ativo')
+                    ->label('Ativo')
+                    ->boolean(),
                 // Tables\Columns\TextColumn::make('email_verified_at')
                 //     ->dateTime()
                 //     ->sortable(),
-                Tables\Columns\ToggleColumn::make('is_admin')
-                ->label('Administrador'),
+                Tables\Columns\TextColumn::make('grupo.titulo')
+                ->label('Grupo')
+                ->searchable(),
+                Tables\Columns\TextColumn::make('roles.name')
+                ->label('Regras')
+                ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
-                ->label('Data de Criação')
+                    ->label('Data de Criação')
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
@@ -87,7 +111,7 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -101,5 +125,16 @@ class UserResource extends Resource
         return [
             'index' => Pages\ManageUsers::route('/'),
         ];
+    }
+    //
+    public static function getEloquentQuery(): Builder
+    {
+        return  auth()->user()->hasRole('admin')
+            ? parent::getEloquentQuery() :  parent::getEloquentQuery()->whereHas(
+                'roles',
+                fn (Builder $query) => (
+                    $query->where('name', '!=', 'admin')
+                )
+            );
     }
 }

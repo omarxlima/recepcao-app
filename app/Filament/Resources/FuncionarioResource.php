@@ -7,7 +7,13 @@ use App\Filament\Resources\FuncionarioResource\RelationManagers;
 use App\Models\Funcionario;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Group;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -20,15 +26,13 @@ class FuncionarioResource extends Resource
     protected static ?string $modelLabel = 'Funcionário';
     protected static ?string $pluralModelLabel = 'Funcionários';
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static ?string $navigationGroup = 'RH';
+    protected static ?string $navigationGroup = 'Identificação';
 
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-
-
                 Forms\Components\FileUpload::make('image')
                     ->label('Imagem')
                     ->columnSpan(2)
@@ -36,33 +40,44 @@ class FuncionarioResource extends Resource
                 Grid::make()->schema([
 
                     Forms\Components\TextInput::make('nome')
+                        ->minLength(3)
                         ->required()
                         ->maxLength(255),
                     Forms\Components\TextInput::make('cpf')
+                        ->mask('999.999.999-99')
+                        ->placeholder('999.999.999-99')
                         ->required()
-                        ->maxLength(255),
+                        ->maxLength(14),
                 ])->columns(2),
                 Grid::make()->schema([
-
                     Forms\Components\TextInput::make('cargo')
                         ->maxLength(255),
                     Forms\Components\TextInput::make('matricula')
+                        ->numeric()
                         ->maxLength(255),
                     Forms\Components\TextInput::make('instituicao')
                         ->maxLength(255),
                     Forms\Components\TextInput::make('telefone')
-                        ->tel()
+                        ->mask('(99)99999-9999')
+                        ->placeholder('(99)99999-9999')
                         ->maxLength(255),
-                        Forms\Components\TextInput::make('pis_pasep')
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('banco')
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('agencia')
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('conta')
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('tipo_conta'),
-                        ])->columns(3),
+                    Forms\Components\TextInput::make('pis_pasep')
+                        ->numeric()
+                        ->maxLength(11),
+                    Forms\Components\TextInput::make('banco')
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('agencia')
+                        ->numeric()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('conta')
+                        ->numeric()
+                        ->maxLength(255),
+                    Select::make('tipo_conta')
+                        ->options([
+                            'CORRENTE' => 'CORRENTE',
+                            'POUPANÇA' => 'POUPANÇA',
+                        ]),
+                ])->columns(3),
                 Forms\Components\TextInput::make('email_funcional')
                     ->email()
                     ->required()
@@ -71,7 +86,7 @@ class FuncionarioResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
-             
+
                 Forms\Components\Toggle::make('ativo')
                     ->required(),
 
@@ -82,7 +97,9 @@ class FuncionarioResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('Imagem')
+                    ->circular(),
                 Tables\Columns\TextColumn::make('nome')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('cpf')
@@ -114,18 +131,18 @@ class FuncionarioResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('tipo_conta')
-                ->toggleable(isToggledHiddenByDefault: true),
-                
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\IconColumn::make('ativo')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
-                ->label('Data de Criação')
-                ->dateTime('d/m/y H:i')
+                    ->label('Data de Criação')
+                    ->dateTime('d/m/y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                ->label('Data de Atualização')
-                ->dateTime('d/m/y H:i')
+                    ->label('Data de Atualização')
+                    ->dateTime('d/m/y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -133,8 +150,10 @@ class FuncionarioResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
+
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -148,5 +167,50 @@ class FuncionarioResource extends Resource
         return [
             'index' => Pages\ManageFuncionarios::route('/'),
         ];
+    }
+
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make([
+                    ImageEntry::make('image')
+                        ->label('Imagem')
+                ])
+                    ->columnSpan(1),
+                Section::make([
+                    Group::make([
+                        TextEntry::make('nome')
+                            ->label('Nome:')
+                            ->weight('bold'),
+                        TextEntry::make('cpf')
+                            ->label('CPF:'),
+                        TextEntry::make('cargo')
+                            ->label('Cargo:'),
+                        TextEntry::make('instituicao')
+                            ->label('Instituição:'),
+                        TextEntry::make('email_funcional')
+                            ->label('Email Funcional:'),
+                        TextEntry::make('email_pessoal')
+                            ->label('Email Pessoal:'),
+                        TextEntry::make('pis_pasep')
+                            ->label('PIS/PASEP:'),
+                        TextEntry::make('banco')
+                            ->label('Banco:'),
+                        TextEntry::make('agencia')
+                            ->label('Agencia:'),
+                        TextEntry::make('conta')
+                            ->label('Conta:'),
+                        TextEntry::make('tipo_conta')
+                            ->label('PIS/PASEP:'),
+                        TextEntry::make('banco')
+                            ->label('Banco:'),
+                    ])->columns(2)
+                ])
+                    ->columnSpan(2),
+
+            ])
+            ->columns(3);
     }
 }
