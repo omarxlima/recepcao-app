@@ -49,8 +49,8 @@ class VisitorResource extends Resource
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Funcionario' => $record->funcionario->nome,
-            'User' => $record->user->name,
+            'Funcionário' => $record->funcionario->nome,
+            'Usuário' => $record->user->name,
         ];
     }
 
@@ -194,14 +194,18 @@ class VisitorResource extends Resource
 
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\ReplicateAction::make()
-                    ->successRedirectUrl(fn (Model $replica): string => route('visitors.edit', [
-                        'visitor' => $replica,
-                    ]))
+                // Tables\Actions\ReplicateAction::make()
+                //     ->successRedirectUrl(fn (Model $replica): string => route('visitors.edit', [
+                //         'visitor' => $replica,
+                //     ]))
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    // Tables\Actions\ReplicateAction::make()
+                    // ->successRedirectUrl(fn (Model $replica): string => route('visitors.edit', [
+                    //     'visitor' => $replica,
+                    // ]))
                 ]),
             ])
             ->headerActions([]);
