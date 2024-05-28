@@ -19,6 +19,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class FuncionarioResource extends Resource
@@ -29,6 +30,27 @@ class FuncionarioResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?string $navigationGroup = 'Identificação';
 
+    protected static ?string $recordTitleAttribute = 'nome';
+
+    protected static int $globalSearchResultsLimit = 20;
+
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['nome', 'cpf','matricula', 'instituicao' , 'email_funcional', 'email_pessoal'];
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'User' => $record->user->name,
+        ];
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['user', 'visitors']);
+    }
 
     public static function form(Form $form): Form
     {

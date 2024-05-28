@@ -36,6 +36,29 @@ class VisitorResource extends Resource
     protected static ?string $pluralModelLabel = 'Visitantes';
     protected static ?string $navigationGroup = 'Identificação';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
+    protected static int $globalSearchResultsLimit = 20;
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'cpf',  'registration','function', 'capacity'];
+    }
+
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Funcionario' => $record->funcionario->nome,
+            'User' => $record->user->name,
+        ];
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['user','funcionario']);
+    }
+
 
     public static function form(Form $form): Form
     {
