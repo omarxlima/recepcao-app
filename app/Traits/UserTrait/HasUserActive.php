@@ -24,12 +24,12 @@ trait HasUserActive
                 ->label('Ativos')
                 ->icon('heroicon-o-check-circle')
                 ->badge($ativos)
-                ->modifyQueryUsing(fn (Builder $query) => $query->whereActive(true)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->whereAtivo(true)),
             'inactive' => Tab::make()
                 ->label('Inativos')
                 ->icon('heroicon-o-x-circle')
                 ->badge($inativos)
-                ->modifyQueryUsing(fn (Builder $query) => $query->whereActive(false)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->whereAtivo(false)),
         ];
     }
 }

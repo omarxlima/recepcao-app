@@ -4,36 +4,101 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\VisitorResource\Pages;
 use App\Filament\Resources\VisitorResource\RelationManagers;
+use App\Forms\Components\webCam;
 use App\Models\Visitor;
+use Dompdf\FrameDecorator\Text;
+use Filament\Actions\ReplicateAction;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Infolists;
+use Filament\Forms\Get;
+use Filament\Infolists\Components\Group;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class VisitorResource extends Resource
 {
     protected static ?string $model = Visitor::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-hand-raised';
     protected static ?string $modelLabel = 'Visitante';
     protected static ?string $pluralModelLabel = 'Visitantes';
-    protected static ?string $navigationIcon = 'heroicon-o-hand-raised';
-    protected static ?string $navigationGroup = 'Recepção';
+    protected static ?string $navigationGroup = 'Identificação';
+
+    protected static ?string $recordTitleAttribute = 'name';
+
+    protected static int $globalSearchResultsLimit = 20;
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'cpf',  'registration','function', 'capacity'];
+    }
+
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Funcionário' => $record->funcionario->nome,
+            'Usuário' => $record->user->name,
+        ];
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()->with(['user','funcionario']);
+    }
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\FileUpload::make('image')
-                    ->label('Imagem')
-                    ->columnSpan(2)
-                    ->image(),
+                // inicio select da web cam ou imagem do pc
+                Select::make('type')
+                    ->label(    'Fonte da Imagem')
+                    ->options([
+                        'webcam' => 'Webcam Image',
+                        'image' => 'Imagem',
+                    ])
+                    ->live()
+                    ->afterStateUpdated(fn (Select $component) => $component
+                        ->getContainer()
+                        ->getComponent('dynamicTypeFields')
+                        ->getChildComponentContainer()
+                        ->fill()),
+
+                Grid::make(2)
+                    ->schema(fn (Get $get): array => match ($get('type')) {
+                        'webcam' => [
+                            webCam::make('image')
+                                ->imageEditor()
+
+                            ->label('Webcam Image'),
+                        ],
+                         'image' => [
+                                 FileUpload::make('image')
+                                   ->imageEditor()
+                                   ->image(),
+                                   // ->getUploadedFileNameForStorageUsing(fn (Forms\Components\FileUpload $component, $file): string => $file->store('uploads/images'))
+                            //         ->columnSpan(1),
+                            ],
+                        default => [],
+                    })
+                    ->key('dynamicTypeFields'),
+                // Forms\Components\FileUpload::make('image')
+                //     ->imageEditor()
+                //     ->image(),
                 Grid::make()->schema([
                     Forms\Components\TextInput::make('name')
                         ->label('Nome')
@@ -41,10 +106,13 @@ class VisitorResource extends Resource
                         ->maxLength(190),
                     Forms\Components\TextInput::make('cpf')
                         ->label('CPF')
+                        ->mask('999.999.999-99')
+                        ->placeholder('999.999.999-99')
                         ->required()
-                        ->maxLength(11),
+                        ->maxLength(14),
                     Forms\Components\TextInput::make('registration')
                         ->label('Matrícula')
+                        ->integer()
                         ->maxLength(255),
                     Forms\Components\TextInput::make('telephone')
                         ->label('Telefone')
@@ -58,29 +126,34 @@ class VisitorResource extends Resource
                     Forms\Components\TextInput::make('capacity')
                         ->label('Orgão Lotação')
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('interlocutor')
+                    // Forms\Components\TextInput::make('interlocutor')
+                    //     ->label('Interlocutor')
+                    //     ->required()
+                    //     ->maxLength(255),
+                    Forms\Components\Select::make('funcionario_id')
                         ->label('Interlocutor')
-                        ->required()
-                        ->maxLength(255),
+                        ->relationship('funcionario', 'nome')
+                        ->required(),
                     Forms\Components\DateTimePicker::make('date_time')
                         ->label('Data Hora')
                         ->seconds(false)
                         ->required(),
 
                 ])->columns(2),
-
-
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-
             ->columns([
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Imagem')
                     ->circular(),
+                // Tables\Columns\ImageColumn::make('foto.path')
+                // ->label('Imagem')
+                // ->circular(),
+
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nome')
                     ->searchable(),
@@ -100,7 +173,7 @@ class VisitorResource extends Resource
                 Tables\Columns\TextColumn::make('capacity')
                     ->label('Orgão')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('interlocutor')
+                Tables\Columns\TextColumn::make('funcionario.nome')
                     ->label('Interlocutor')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -118,42 +191,80 @@ class VisitorResource extends Resource
                 //
             ])
             ->actions([
+
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\ReplicateAction::make()
+                //     ->successRedirectUrl(fn (Model $replica): string => route('visitors.edit', [
+                //         'visitor' => $replica,
+                //     ]))
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    // Tables\Actions\ReplicateAction::make()
+                    // ->successRedirectUrl(fn (Model $replica): string => route('visitors.edit', [
+                    //     'visitor' => $replica,
+                    // ]))
                 ]),
-
-            ]);
+            ])
+            ->headerActions([]);
     }
-    public static function infolist(Infolist $infolist): Infolist
+
+    public static function getRelations(): array
     {
-        return $infolist
-            ->schema([
-                    Infolists\Components\ImageEntry::make('image')
-                    ->label('Imagem')
-                    ->circular(),
-                    Infolists\Components\TextEntry::make('name'),
-                    Infolists\Components\TextEntry::make('cpf'),
-                    Infolists\Components\TextEntry::make('registration'),
-                    Infolists\Components\TextEntry::make('telephone'),
-                    Infolists\Components\TextEntry::make('function'),
-                    Infolists\Components\TextEntry::make('capacity'),
-                    Infolists\Components\TextEntry::make('interlocutor'),
-                    Infolists\Components\TextEntry::make('date_time')
-
-
-                        ->columnSpanFull(),
-                ]);
+        return [
+            //
+        ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageVisitors::route('/'),
+            'index' => Pages\ListVisitors::route('/'),
+            'create' => Pages\CreateVisitor::route('/create'),
+            'edit' => Pages\EditVisitor::route('/{record}/edit'),
+            // 'copy' => Pages\EditVisitor::route('/{record}/copy'),
+
         ];
+    }
+
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make([
+                    ImageEntry::make('image')
+                    ->label('Imagem:')
+                ])
+                    ->columnSpan(1),
+                Section::make([
+                    Group::make([
+                        TextEntry::make('name')
+                            ->label('Nome:')
+                            ->weight('bold'),
+                        TextEntry::make('cpf')
+                            ->label('CPF:'),
+                        TextEntry::make('registration')
+                            ->label('Matrícula:'),
+                        TextEntry::make('telephone')
+                            ->label('Telefone:'),
+                        TextEntry::make('function')
+                            ->label('Função:'),
+                        TextEntry::make('capacity')
+                            ->label('Orgão Lotação:'),
+                        TextEntry::make('interlocutor')
+                            ->label('Interlocutor:'),
+                        TextEntry::make('created_at')
+                            ->label('Criado Em:')
+                            ->date('d/m/Y'),
+
+                    ])->columns(2)
+                ])
+                    ->columnSpan(2),
+
+            ])
+            ->columns(3);
     }
 }
